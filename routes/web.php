@@ -4,4 +4,4 @@
  * Web Routes
  */
 
-Route::get('/', 'HomeController');
+Route::get('/{any?}', 'AppController')->where('any', '.*');

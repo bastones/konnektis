@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-class HomeController extends Controller
+class AppController extends Controller
 {
     /**
-     * Show the front view.
+     * Show the view.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function __invoke()
     {
-        return view('index');
+        return view('app');
     }
 }
