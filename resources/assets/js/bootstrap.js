@@ -28,6 +28,12 @@ $('body').tooltip({
 window.Vue = require('vue');
 
 /**
+ * Vue Router
+ */
+import VueRouter from 'vue-router';
+Vue.use(VueRouter);
+
+/**
  * Axios Library
  */
 window.axios = require('axios');

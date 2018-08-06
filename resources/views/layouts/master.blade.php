@@ -15,18 +15,16 @@
     @yield('styles')
 
     <title>
-        @yield('title')
+        Loading...
     </title>
 </head>
 <body>
     <div id="root">
-        @yield('main')
+        <transition name="custom" enter-active-class="animated fadeIn" mode="out-in">
+            <router-view></router-view>
+        </transition>
     </div>
 
-    @section('scripts')
-        <script>
-            window.user = {!! json_encode(Auth::user()) !!};
-        </script>
-    @show
+    <script src="{{ mix('js/app.js') }}"></script>
 </body>
 </html>
