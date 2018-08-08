@@ -1,0 +1,293 @@
+<template>
+    <div v-if="loading" class="loading text-center">
+        <i class="fas fa-circle-notch fa-spin"></i>
+    </div>
+
+    <div v-else class="container pt-4 pb-4">
+        <form @submit.prevent="submitForm" @keydown.esc="hideForm" novalidate>
+            <div class="table-responsive">
+                <table class="table" :class="{ 'table-striped': people.length > 1 }">
+                    <thead>
+                        <tr>
+                            <td>
+                                Full Name
+                            </td>
+
+                            <td>
+                                Email Address
+                            </td>
+
+                            <td>
+                                Phone No.
+                            </td>
+
+                            <td>
+                                <div class="float-right" v-if="people.length">
+                                    <a v-if="! form.show" href="javascript:;" class="text-secondary" @click="showForm">
+                                        <i class="fas fa-plus-circle"></i>
+                                    </a>
+
+                                    <a v-else href="javascript:;" class="text-danger" @click="hideForm">
+                                        <i class="fas fa-minus-circle"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr v-if="form.show || ! people.length">
+                            <td>
+                                <input type="text"
+                                       class="form-control"
+                                       :class="{ 'is-invalid': form.errors && typeof form.errors.name !== typeof undefined }"
+                                       @keydown="removeError('name')"
+                                       placeholder="What's the full name?"
+                                       v-model="form.data.name"
+                                       ref="name">
+
+                                <div class="invalid-feedback"
+                                     v-if="form.errors && typeof form.errors.name !== typeof undefined"
+                                     v-text="form.errors.name[0]"></div>
+                            </td>
+
+                            <td>
+                                <input type="email"
+                                       class="form-control"
+                                       :class="{ 'is-invalid': form.errors && typeof form.errors.email !== typeof undefined }"
+                                       @keydown="removeError('email')"
+                                       placeholder="What's the email address?"
+                                       v-model="form.data.email">
+
+                                <div class="invalid-feedback"
+                                     v-if="form.errors && typeof form.errors.email !== typeof undefined"
+                                     v-text="form.errors.email[0]"></div>
+                            </td>
+
+                            <td>
+                                <input type="text"
+                                       class="form-control"
+                                       :class="{ 'is-invalid': form.errors && typeof form.errors.phone !== typeof undefined }"
+                                       @keydown="removeError('phone')"
+                                       placeholder="What's the phone number?"
+                                       v-model="form.data.phone">
+
+
+                                <div class="invalid-feedback"
+                                     v-if="form.errors && typeof form.errors.phone !== typeof undefined"
+                                     v-text="form.errors.phone[0]"></div>
+                            </td>
+
+                            <td>
+                                <button class="btn btn-block btn-secondary" :disabled="refreshing">
+                                    Add
+                                </button>
+                            </td>
+                        </tr>
+
+                        <template v-for="person in people">
+                            <tr>
+                                <td v-text="person.name"></td>
+
+                                <td v-text="person.email"></td>
+
+                                <td v-text="person.phone"></td>
+
+                                <td>
+                                    <div class="float-right">
+                                        <a class="text-secondary" @click="deletePerson(person.id)" href="javascript:;">
+                                            <i v-if="deleting === person.id" class="fas fa-circle-notch fa-spin"></i>
+
+                                            <i v-else class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </form>
+
+        <nav>
+            <paginate
+                    v-model="page"
+                    :page-count="meta.last_page"
+                    :page-range="3"
+                    :margin-pages="2"
+                    :click-handler="getPaginatedResults"
+                    :prev-text="'Prev'"
+                    :next-text="'Next'"
+                    container-class="pagination justify-content-center mt-4"
+                    page-class="page-item"
+                    disabled-class="page-item disabled"
+                    next-class="page-item"
+                    prev-link-class="page-link"
+                    next-link-class="page-link"
+                    page-link-class="page-link">
+            </paginate>
+        </nav>
+
+        <div v-if="refreshing" class="refreshing text-center d-none d-sm-block">
+            <i class="fas fa-circle-notch fa-spin"></i>
+        </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        data() {
+            return {
+                people: [],
+                meta: [],
+                page: 1,
+
+                form: {
+                    show: false,
+
+                    errors: null,
+
+                    data: {
+                        name: '',
+                        email: '',
+                        phone: '',
+                    },
+                },
+
+                loading: true,
+                refreshing: false,
+                deleting: null,
+            };
+        },
+
+        methods: {
+            getPeople() {
+                axios.get('/api/people?page=' + this.page).then(HttpResponse => {
+                    let data = HttpResponse.data;
+
+                    this.people = data.data;
+                    this.meta = data.meta;
+
+                    this.loading = false;
+                    this.refreshing = false;
+
+                    this.$nextTick(() => {
+                        if (! this.people.length) {
+                            this.$refs.name.focus();
+                        }
+                    });
+
+                    this.form.show = false;
+
+                    this.emptyForm();
+                });
+            },
+
+            getPaginatedResults() {
+                this.refreshing = true;
+
+                this.getPeople();
+            },
+
+            deletePerson(id) {
+                this.deleting = id;
+
+                axios.delete('/api/people/' + id).then(() => {
+                    swal({
+                        icon: 'success',
+                        title: 'Deleted.',
+                        text: '',
+                        button: false,
+                        timer: 1000,
+                    });
+
+                    this.refreshing = true;
+
+                    this.getPeople();
+                }).catch(() => {
+                    swal({
+                        icon: 'error',
+                        title: 'Sorry.',
+                        text: 'Something went wrong. Please try again.',
+                        button: 'OK',
+                    });
+                });
+            },
+
+            showForm() {
+                this.form.show = true;
+
+                this.$nextTick(() => {
+                    this.$refs.name.focus();
+                });
+            },
+
+            hideForm() {
+                this.form.show = false;
+
+                this.emptyForm();
+            },
+
+            emptyForm() {
+                this.form.errors = null;
+                this.form.data.name = '';
+                this.form.data.email = '';
+                this.form.data.phone = '';
+            },
+
+            submitForm() {
+                this.refreshing = true;
+
+                axios.post('/api/people', this.form.data).then(HttpResponse => {
+                    if (HttpResponse.data.success) {
+                        this.getPeople();
+                    }
+                }).catch(HttpResponse => {
+                    if (typeof HttpResponse.response.data.errors !== typeof undefined) {
+                        this.form.errors = HttpResponse.response.data.errors;
+                    }
+
+                    this.refreshing = false;
+
+                    this.$nextTick(() => {
+                        this.$refs.name.focus();
+                    });
+                });
+            },
+
+            removeError(key) {
+                if (this.form.errors && typeof this.form.errors[key] !== typeof undefined) {
+                    delete this.form.errors[key];
+                }
+            },
+        },
+
+        created() {
+            document.title = 'Welcome to Konnektis';
+
+            this.getPeople();
+        },
+    };
+</script>
+
+<style scoped>
+    @media (max-width: 992px) {
+        .table td > input {
+            min-width: 250px;
+        }
+    }
+
+    .table > thead > tr > td {
+        position: relative;
+    }
+
+    .table > thead > tr > td > div.float-right > a,
+    .table > tbody > tr > td > div.float-right > a {
+        font-size: 18px;
+        padding: 5px 8px;
+    }
+
+    .table > tbody > tr > td > div.float-right > a {
+        margin-right: 2px;
+    }
+</style>

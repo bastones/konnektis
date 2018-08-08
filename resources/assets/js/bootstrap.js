@@ -23,9 +23,28 @@ $('body').tooltip({
 });
 
 /**
+ * Sweet Alert
+ */
+import swal from 'sweetalert';
+window.swal = swal;
+
+/**
  * Vue JS
  */
 window.Vue = require('vue');
+
+/**
+ * Vue Router
+ */
+import VueRouter from 'vue-router';
+Vue.use(VueRouter);
+
+
+/**
+ * Vue Paginate
+ */
+import Paginate from 'vuejs-paginate';
+Vue.component('paginate', Paginate);
 
 /**
  * Axios Library

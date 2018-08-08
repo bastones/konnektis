@@ -10,23 +10,21 @@
 
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
 
     @yield('styles')
 
     <title>
-        @yield('title')
+        Loading...
     </title>
 </head>
 <body>
+    @include('layouts.header')
+
     <div id="root">
-        @yield('main')
+        <router-view></router-view>
     </div>
 
-    @section('scripts')
-        <script>
-            window.user = {!! json_encode(Auth::user()) !!};
-        </script>
-    @show
+    <script src="{{ mix('js/app.js') }}"></script>
 </body>
 </html>
