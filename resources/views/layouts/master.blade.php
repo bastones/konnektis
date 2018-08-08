@@ -10,7 +10,7 @@
 
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
 
     @yield('styles')
 

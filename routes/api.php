@@ -4,4 +4,4 @@
  * API Routes
  */
 
-Route::apiResource('people', 'PersonController');
+Route::apiResource('people', 'PersonController')->only(['index', 'store', 'destroy']);

@@ -6,7 +6,7 @@
     <div v-else class="container pt-4 pb-4">
         <form @submit.prevent="submitForm" @keydown.esc="hideForm" novalidate>
             <div class="table-responsive">
-                <table class="table table-striped">
+                <table class="table" :class="{ 'table-striped': people.length > 1 }">
                     <thead>
                         <tr>
                             <td>
@@ -94,22 +94,12 @@
                                 <td v-text="person.phone"></td>
 
                                 <td>
-                                    <div class="dropdown float-right">
-                                        <a href="javascript:;" class="text-secondary" data-toggle="dropdown" aria-haspopup="true"
-                                           id="options"
-                                           aria-expanded="false">
-                                            <i class="fas fa-cog"></i>
+                                    <div class="float-right">
+                                        <a class="text-secondary" @click="deletePerson(person.id)" href="javascript:;">
+                                            <i v-if="deleting === person.id" class="fas fa-circle-notch fa-spin"></i>
+
+                                            <i v-else class="fas fa-trash-alt"></i>
                                         </a>
-
-                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="options">
-                                            <a class="dropdown-item" href="#">
-                                                Edit...
-                                            </a>
-
-                                            <a class="dropdown-item" href="#">
-                                                Delete...
-                                            </a>
-                                        </div>
                                     </div>
                                 </td>
                             </tr>
@@ -166,6 +156,7 @@
 
                 loading: true,
                 refreshing: false,
+                deleting: null,
             };
         },
 
@@ -180,8 +171,40 @@
                     this.loading = false;
                     this.refreshing = false;
 
+                    this.$nextTick(() => {
+                        if (! this.people.length) {
+                            this.$refs.name.focus();
+                        }
+                    });
+
                     this.form.show = false;
+
                     this.emptyForm();
+                });
+            },
+
+            deletePerson(id) {
+                this.deleting = id;
+
+                axios.delete('/api/people/' + id).then(() => {
+                    swal({
+                        icon: 'success',
+                        title: 'Deleted.',
+                        text: '',
+                        button: false,
+                        timer: 1000,
+                    });
+
+                    this.refreshing = true;
+
+                    this.getPeople();
+                }).catch(() => {
+                    swal({
+                        icon: 'error',
+                        title: 'Sorry.',
+                        text: 'Something went wrong. Please try again.',
+                        button: 'OK',
+                    });
                 });
             },
 
@@ -239,10 +262,6 @@
             },
         },
 
-        mounted() {
-            //
-        },
-
         created() {
             document.title = 'Welcome to Konnektis';
 
@@ -263,8 +282,12 @@
     }
 
     .table > thead > tr > td > div.float-right > a,
-    .table > tbody > tr > td > div.dropdown > a {
+    .table > tbody > tr > td > div.float-right > a {
         font-size: 18px;
         padding: 5px 8px;
+    }
+
+    .table > tbody > tr > td > div.float-right > a {
+        margin-right: 2px;
     }
 </style>
