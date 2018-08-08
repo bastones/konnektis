@@ -19,10 +19,10 @@
     </title>
 </head>
 <body>
+    @include('layouts.header')
+
     <div id="root">
-        <transition name="custom" enter-active-class="animated fadeIn" mode="out-in">
-            <router-view></router-view>
-        </transition>
+        <router-view></router-view>
     </div>
 
     <script src="{{ mix('js/app.js') }}"></script>
