@@ -22,7 +22,7 @@
                             </td>
 
                             <td>
-                                <div class="float-right">
+                                <div class="float-right" v-if="people.length">
                                     <a v-if="! form.show" href="javascript:;" class="text-secondary" @click="showForm">
                                         <i class="fas fa-plus-circle"></i>
                                     </a>
@@ -36,7 +36,7 @@
                     </thead>
 
                     <tbody>
-                        <tr v-if="form.show">
+                        <tr v-if="form.show || ! people.length">
                             <td>
                                 <input type="text"
                                        class="form-control"
