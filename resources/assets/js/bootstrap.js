@@ -23,6 +23,12 @@ $('body').tooltip({
 });
 
 /**
+ * Sweet Alert
+ */
+import swal from 'sweetalert';
+window.swal = swal;
+
+/**
  * Vue JS
  */
 window.Vue = require('vue');
