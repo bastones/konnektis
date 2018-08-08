@@ -1,2 +1,11 @@
 // Fonts
 $font-family-sans-serif: 'Roboto', 'Helvetica Neue', sans-serif !default;
+
+// Colours
+$gray-600: #6c757d !default;
+$gray-200: #e9ecef !default;
+
+$pagination-color: $gray-600;
+$pagination-hover-color: $gray-600;
+$dropdown-link-hover-bg: $gray-200 !default;
+$component-active-bg: lighten(#333a41, 10%) !default;
