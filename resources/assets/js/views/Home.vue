@@ -183,6 +183,12 @@
                 });
             },
 
+            getPaginatedResults() {
+                this.refreshing = true;
+
+                this.getPeople();
+            },
+
             deletePerson(id) {
                 this.deleting = id;
 
@@ -206,12 +212,6 @@
                         button: 'OK',
                     });
                 });
-            },
-
-            getPaginatedResults() {
-                this.refreshing = true;
-
-                this.getPeople();
             },
 
             showForm() {
