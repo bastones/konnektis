@@ -4,7 +4,7 @@
     </div>
 
     <div v-else class="container pt-4 pb-4">
-        <form @submit.prevent="submitForm" novalidate>
+        <form @submit.prevent="submitForm" @keydown.esc="hideForm" novalidate>
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
@@ -19,14 +19,18 @@
 
                             <td>
                                 Phone No.
+                            </td>
 
-                                <a v-if="! form.show" href="javascript:;" class="text-secondary" @click="showForm">
-                                    <i class="fas fa-plus-circle"></i>
-                                </a>
+                            <td>
+                                <div class="float-right">
+                                    <a v-if="! form.show" href="javascript:;" class="text-secondary" @click="showForm">
+                                        <i class="fas fa-plus-circle"></i>
+                                    </a>
 
-                                <a v-else href="javascript:;" class="text-danger" @click="hideForm">
-                                    <i class="fas fa-minus-circle"></i>
-                                </a>
+                                    <a v-else href="javascript:;" class="text-danger" @click="hideForm">
+                                        <i class="fas fa-minus-circle"></i>
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     </thead>
@@ -60,26 +64,24 @@
                                      v-text="form.errors.email[0]"></div>
                             </td>
 
-                            <td class="d-flex flex-row">
-                                <div class="w-100 mr-3">
-                                    <input type="text"
-                                           class="form-control"
-                                           :class="{ 'is-invalid': form.errors && typeof form.errors.phone !== typeof undefined }"
-                                           @keydown="removeError('phone')"
-                                           placeholder="What's the phone number?"
-                                           v-model="form.data.phone">
+                            <td>
+                                <input type="text"
+                                       class="form-control"
+                                       :class="{ 'is-invalid': form.errors && typeof form.errors.phone !== typeof undefined }"
+                                       @keydown="removeError('phone')"
+                                       placeholder="What's the phone number?"
+                                       v-model="form.data.phone">
 
 
-                                    <div class="invalid-feedback"
-                                         v-if="form.errors && typeof form.errors.phone !== typeof undefined"
-                                         v-text="form.errors.phone[0]"></div>
-                                </div>
+                                <div class="invalid-feedback"
+                                     v-if="form.errors && typeof form.errors.phone !== typeof undefined"
+                                     v-text="form.errors.phone[0]"></div>
+                            </td>
 
-                                <div class="d-inline-block">
-                                    <button class="btn btn-secondary" :disabled="refreshing">
-                                        Add
-                                    </button>
-                                </div>
+                            <td>
+                                <button class="btn btn-block btn-secondary" :disabled="refreshing">
+                                    Add
+                                </button>
                             </td>
                         </tr>
 
@@ -90,6 +92,26 @@
                                 <td v-text="person.email"></td>
 
                                 <td v-text="person.phone"></td>
+
+                                <td>
+                                    <div class="dropdown float-right">
+                                        <a href="javascript:;" class="text-secondary" data-toggle="dropdown" aria-haspopup="true"
+                                           id="options"
+                                           aria-expanded="false">
+                                            <i class="fas fa-cog"></i>
+                                        </a>
+
+                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="options">
+                                            <a class="dropdown-item" href="#">
+                                                Edit...
+                                            </a>
+
+                                            <a class="dropdown-item" href="#">
+                                                Delete...
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                         </template>
                     </tbody>
@@ -231,8 +253,7 @@
 
 <style scoped>
     @media (max-width: 992px) {
-        .table td,
-        .table td > div:first-child {
+        .table td > input {
             min-width: 250px;
         }
     }
@@ -241,10 +262,8 @@
         position: relative;
     }
 
-    .table > thead > tr > td > a {
-        position: absolute;
-        top: 6px;
-        right: 2px;
+    .table > thead > tr > td > div.float-right > a,
+    .table > tbody > tr > td > div.dropdown > a {
         font-size: 18px;
         padding: 5px 8px;
     }
