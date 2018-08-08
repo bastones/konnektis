@@ -34,13 +34,7 @@ class PersonController extends Controller
             'phone' => $request->get('phone'),
         ]);
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'success' => true,
-            ]);
-        }
-
-        return redirect()->back()->with([
+        return response()->json([
             'success' => true,
         ]);
     }
