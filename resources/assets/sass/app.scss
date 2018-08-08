@@ -6,3 +6,31 @@
     @import "~@fortawesome/fontawesome-free/scss/solid";
 
 /* End Dependencies */
+
+
+/* Common */
+
+    .loading,
+    .refreshing {
+        font-size: 24px;
+        color: #888;
+    }
+
+    .loading {
+        margin-top: 50px;
+    }
+
+    .refreshing {
+        margin-top: 25px;
+    }
+
+/* End Common */
+
+
+/* Header */
+
+    .navbar > div#navbar {
+        padding-top: 3px;
+    }
+
+/* End Header */

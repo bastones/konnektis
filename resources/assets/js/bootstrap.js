@@ -33,6 +33,13 @@ window.Vue = require('vue');
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
+
+/**
+ * Vue Paginate
+ */
+import Paginate from 'vuejs-paginate';
+Vue.component('paginate', Paginate);
+
 /**
  * Axios Library
  */
