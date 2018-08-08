@@ -14,5 +14,7 @@ class Person extends Model
      *
      * @var array
      */
-    protected $guarded = ['id'];
+    protected $guarded = [
+        //
+    ];
 }
