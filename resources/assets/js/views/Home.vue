@@ -3,7 +3,7 @@
         <i class="fas fa-circle-notch fa-spin"></i>
     </div>
 
-    <div class="container pt-4 pb-4" v-else>
+    <div v-else class="container pt-4 pb-4">
         <table class="table table-striped table-responsive-sm">
             <thead>
                 <tr>
