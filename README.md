@@ -39,6 +39,14 @@ $ vagrant up
 $ npm run dev
 ```
 
+**Step 5: Seed the Database**
+
+```
+$ vagrant ssh
+$ cd code
+$ art db:seed
+```
+
 ## Licence Information
 
 This project is made available under the terms of the MIT license - see the LICENCE.md file for details.
